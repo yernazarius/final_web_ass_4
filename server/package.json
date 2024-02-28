@@ -9,7 +9,7 @@
     "dev": "nodemon server",
     "data:import": "node seeder",
     "data:destroy": "node seeder -d",
-    "build": "npm i"
+    "build": "npm install && cd .. && cd client/ && npm install && npm run build"
   },
   "keywords": [],
   "author": "",

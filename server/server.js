@@ -26,13 +26,8 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use(
-  cors({
-    origin: ["http://127.0.0.1:3000", "http://localhost:3000"],
-    methods: "GET, POST, PATCH, DELETE, PUT",
-    credentials: true,
-  })
-)
+app.use(cors())
+
 
 app.use(cookieParser())
 passport(app)
@@ -41,10 +36,6 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 stripe(app)
-
-app.get("/", (req, res) => {
-  res.send("Api is running...")
-})
 
 app.use("/api/products", productRoutes)
 app.use("/api/users", userRoutes)
@@ -55,9 +46,16 @@ app.use("/api/upload", uploadRoutes)
 const __dirname = path.resolve()
 app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 
-app.use(notFound)
-app.use(errorHandler)
+// app.use(notFound)
+// app.use(errorHandler)
 
+// Serve static files from the frontend build directory
+app.use(express.static(path.join(__dirname, "../client/dist")))
+
+// Serve the frontend's index.html file for any unknown routes
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/dist/index.html"))
+})
 app.listen(PORT, () => {
   console.log(`Server is runing on port ${PORT}`)
 })
